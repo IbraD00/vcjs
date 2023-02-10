@@ -46,7 +46,7 @@ if (cookieVimpUTM && !queryVimpUTM) {
 
 
 
-function vimp_track(type, data) {
+export function vimp_track(type, data) {
     let params = {
         'type': type,
         'vimp_utm': cookieVimpUTM,
