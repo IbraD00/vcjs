@@ -56,3 +56,20 @@ function vimp_track(type, data) {
     console.log("VIMP CLIENT JS SEND ->")
     console.log(params);
 }
+
+
+(function (window) {
+
+  // declare
+  var vimp = {};
+
+  // your sdk init function
+  vimp.init = function () {
+      // ...
+      console.log("VIMP INIT->")
+  };
+
+  // define your namespace myApp
+  window.vimp = vimp;
+
+})(window, undefined);
