@@ -104,7 +104,7 @@ function vumpRequest(url, params, method) {
 
   vimp.track = function (params) {
       var baseURL = 'https://vimpconvapi.devphantom.com/api/conversion?v=1'
-      var data = ""
+      var data = '&host='+location.host+'&referrer='+document.referrer
       for (var name in params) {
           data = data.concat('&'+name+'='+encodeURIComponent(params[name]))
       }
