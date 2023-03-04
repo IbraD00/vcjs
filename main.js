@@ -86,7 +86,6 @@ function vumpRequest(url, params, method) {
   document.body.appendChild(iframe);
 }
 
-
 (function (window) {
 
   // declare
@@ -104,7 +103,15 @@ function vumpRequest(url, params, method) {
   };
 
   vimp.track = function (data) {
-      vumpRequest('https://vimpconvapi.devphantom.com/api/conversion', data, 'POST')
+      var baseURL = 'https://vimpconvapi.devphantom.com/api/conversion?v=1'
+      var data = ""
+      for (var name in params) {
+          data = data.concat('&'+name+'='+encodeURIComponent(params[name]))
+      }
+      var img = new Image();
+      img.src = baseURL + data;
+      img.onload = null;
+      img.onerror = null;
       console.log("VIMP DATA SENT")
   };
 
