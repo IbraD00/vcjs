@@ -1,4 +1,10 @@
 
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+let queryVimpUTM = params.vimp_utm
+let cookieVimpUTM = getCookie('vimp_utm')
+
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -20,12 +26,6 @@ function getCookie(cname) {
   }
   return "";
 }
-const params = new Proxy(new URLSearchParams(window.location.search), {
-  get: (searchParams, prop) => searchParams.get(prop),
-});
-let queryVimpUTM = params.vimp_utm
-let cookieVimpUTM = getCookie('vimp_utm')
-
 
 if (!cookieVimpUTM && queryVimpUTM) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -44,17 +44,46 @@ if (cookieVimpUTM && !queryVimpUTM) {
     window.location.search = urlParams;
 }
 
+function vumpRequest(url, params, method) {
 
+  params = params || {};
+  method = method || "post";
 
-function vimp_track(type, data) {
-    let params = {
-        'type': type,
-        'vimp_utm': cookieVimpUTM,
-        'data': data
-    }
-    // SEND API
-    console.log("VIMP CLIENT JS SEND ->")
-    console.log(params);
+  // function to remove the iframe
+  var removeIframe = function( iframe ){
+      iframe.parentElement.removeChild(iframe);
+  };
+
+  // make a iframe...
+  var iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+
+  iframe.onload = function() {
+      var iframeDoc = this.contentWindow.document;
+
+      // Make a invisible form
+      var form = iframeDoc.createElement('form');
+      form.method = method;
+      form.action = url;
+      iframeDoc.body.appendChild(form);
+
+      // pass the parameters
+      for ( var name in params ){
+          var input = iframeDoc.createElement('input');
+          input.type = 'hidden';
+          input.name = name;
+          input.value = params[name];
+          form.appendChild(input);
+      }
+
+      form.submit();
+      // remove the iframe
+      setTimeout( function(){
+          removeIframe(iframe);
+      }, 500);
+  };
+
+  document.body.appendChild(iframe);
 }
 
 
@@ -67,9 +96,19 @@ function vimp_track(type, data) {
   vimp.init = function () {
       // ...
       console.log("VIMP INIT->")
+      vimp.track({
+          'event': 'PAGE_VIEW',
+          'campaign': 1,
+          'action': 3,
+      })
+  };
+
+  vimp.track = function (data) {
+      vumpRequest('https://vimpconvapi.devphantom.com/api/conversion', data, 'POST')
+      console.log("VIMP DATA SENT")
   };
 
   // define your namespace myApp
   window.vimp = vimp;
 
-})(window, undefined);
+  })(window, undefined);
