@@ -102,7 +102,7 @@ function vumpRequest(url, params, method) {
       })
   };
 
-  vimp.track = function (data) {
+  vimp.track = function (params) {
       var baseURL = 'https://vimpconvapi.devphantom.com/api/conversion?v=1'
       var data = ""
       for (var name in params) {
