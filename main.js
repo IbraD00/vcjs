@@ -59,7 +59,7 @@ function vumpRequest(url, params, method) {
   iframe.style.display = 'none';
 
   iframe.onload = function() {
-      var iframeDoc = this.contentWindow.document;
+    var iframeDoc = iframe.contentWindow.document;
 
       // Make a invisible form
       var form = iframeDoc.createElement('form');
